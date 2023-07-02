@@ -1,0 +1,12 @@
+{
+  "name": "Timer H4pp3ns",
+  "short_name": "TimerH4pp3ns",
+  "description": "## Build Setup",
+  "icons": [],
+  "start_url": "/timerh4pp3ns/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "lang": "en",
+  "icon": false,
+  "id": "~static/?standalone=true"
+}
