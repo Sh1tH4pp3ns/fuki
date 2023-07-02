@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Stream Ballot Token</h1>
+
+<div id="token">Something went wrong :(</div>
+
+<script type="text/javascript">
+  const { access_token } = Object.fromEntries(document.location.hash.substring(1).split("&").map(entry => entry.split("=")));
+
+  token.textContent = access_token ? `Here is the token: ${access_token}` : "Something went wrong :(";
+
+</script>
+
+</body>
+</html>
