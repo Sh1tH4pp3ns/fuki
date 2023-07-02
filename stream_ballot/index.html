@@ -31,8 +31,8 @@
           }
       })
 
-      if(response.status !== 200) {
-          throw new Error("Status code != 200")
+      if(!response.ok) {
+          throw response
       }
 
       const body = await response.json()
