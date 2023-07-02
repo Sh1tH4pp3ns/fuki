@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,13 +12,61 @@
 <body>
 <h1>Stream Ballot Token</h1>
 
-<div id="token">Something went wrong :(</div>
+<div id="waiting">Please wait...</div>
+<div id="main" class="hidden">
+    <h2>Token:</h2>
+    <div id="token"></div>
+    <h2>Expiry:</h2>
+    <div id="expiry"></div>
+    <h2>Scopes:</h2>
+    <ul id="scopeList"></ul>
+</div>
 
 <script type="text/javascript">
-  const { access_token } = Object.fromEntries(document.location.hash.substring(1).split("&").map(entry => entry.split("=")));
+  async function validate() {
+      const { access_token } = Object.fromEntries(document.location.hash.substring(1).split("&").map(entry => entry.split("=")));
+      const response = await fetch("https://id.twitch.tv/oauth2/validate", {
+          headers: {
+              Authorization: `Bearer ${access_token}`
+          }
+      })
 
-  token.textContent = access_token ? `Here is the token: ${access_token}` : "Something went wrong :(";
+      if(response.status !== 200) {
+          throw new Error("Status code != 200")
+      }
 
+      const body = await response.json()
+
+      return {
+          ...body,
+          access_token
+      }
+  }
+
+  validate()
+      .then(({
+                 client_id,
+                 login,
+                 scopes,
+                 user_id,
+                 expires_in,
+                 access_token
+      }) => {
+          token.textContent = access_token
+          expiry.textContent = new Date(Date.now() + expires_in * 1000).toLocaleString("de-DE", { timeZone: "Europe/Berlin"})
+          scopes?.forEach(scope => {
+              const li = document.createElement("li")
+              li.textContent = scope
+
+              scopeList.appendChild(li)
+          })
+
+          waiting.classList.add("hidden")
+          main.classList.remove("hidden")
+      }).catch(error => {
+          waiting.textContent = "Something went wrong :(";
+          throw error
+      })
 </script>
 
 </body>
